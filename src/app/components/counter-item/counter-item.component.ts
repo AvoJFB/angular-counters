@@ -1,4 +1,5 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { CounterService } from '../../counter.service';
 
 @Component({
   selector: 'counter-item',
@@ -8,19 +9,20 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 export class CounterItemComponent {
   @Input() counter;
-  @Output() increment = new EventEmitter;
-  @Output() decrement = new EventEmitter;
-  @Output() delete = new EventEmitter;
+
+  constructor(private counterService: CounterService) {}
 
   onIncrement() {
-    this.increment.emit();
+    this.counter.value += 1;
+    this.counterService.incrementCounter(this.counter._id, 1).subscribe((res) => console.log(res));
   }
 
   onDecrement() {
-    this.decrement.emit();
+    this.counter.value -= 1;
+    this.counterService.decrementCounter(this.counter._id, 1).subscribe((res) => console.log(res));
   }
 
   onDelete() {
-    this.delete.emit();
+    this.counterService.deleteCounter(this.counter._id).subscribe((res) => console.log(res));
   }
 }

@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { CounterService } from '../counter.service';
+import { Component, Output, EventEmitter } from '@angular/core';
+import { CounterService } from '../../counter.service';
 
 @Component({
   selector: 'counter-form',
@@ -13,6 +13,7 @@ export class CounterFormComponent {
   constructor(private counterService: CounterService) {}
 
   onSubmit() {
-    this.counterService.createCounter(this.title);
+    this.counterService.createCounter(this.title, 0).subscribe((res) => console.log(res));
+    this.title = '';
   }
 }

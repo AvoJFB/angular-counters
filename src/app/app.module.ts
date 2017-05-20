@@ -7,7 +7,8 @@ import { CounterFormComponent } from './components/counter-form/counter-form.com
 import { CounterItemComponent } from './components/counter-item/counter-item.component';
 import { CounterListComponent } from './components/counter-list/counter-list.component';
 
-import { CounterService } from './components/counter.service';
+import { CounterService } from './counter.service';
+import {Http, HttpModule} from "@angular/http";
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { CounterService } from './components/counter.service';
   imports: [
     BrowserModule,
     FormsModule,
+    HttpModule,
   ],
   providers: [
     CounterService,
