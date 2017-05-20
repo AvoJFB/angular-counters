@@ -6,7 +6,7 @@ const MongoClient = require('mongodb').MongoClient;
 const ObjectID = require('mongodb').ObjectID;
 
 const app = express();
-const DB_URL = 'mongodb://avojfb:avetikharut2000@ds137230.mlab.com:37230/counters-app';
+const DB_URL = process.env.MONGOLAB_URI || 'mongodb://avojfb:avetikharut2000@ds137230.mlab.com:37230/counters-app';
 const port = 1337;
 const db = require('./db');
 
