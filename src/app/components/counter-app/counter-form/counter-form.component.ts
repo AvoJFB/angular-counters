@@ -1,10 +1,10 @@
 import { Component, Output, EventEmitter } from '@angular/core';
-import { CounterService } from '../../counter.service';
+import { CounterService } from '../../../counter.service';
 
 @Component({
   selector: 'counter-form',
-  templateUrl: './counter-form.component.html',
-  styleUrls: ['./counter-form.component.css']
+  templateUrl: 'counter-form.component.html',
+  styleUrls: ['counter-form.component.css']
 })
 
 export class CounterFormComponent {
@@ -13,7 +13,7 @@ export class CounterFormComponent {
   constructor(private counterService: CounterService) {}
 
   onSubmit() {
-    this.counterService.createCounter(this.title, 0).subscribe((res) => console.log(res));
+    this.counterService.createCounter(this.title, 0);
     this.title = '';
   }
 }

@@ -44,7 +44,7 @@ app.put('/api/counter/:id/increment/:value', (req, res) => {
         console.log(err);
         return res.sendStatus(500);
       }
-      res.sendStatus(200);
+      res.send(result);
     }
   )
 });
@@ -61,7 +61,7 @@ app.put('/api/counter/:id/decrement/:value', (req, res) => {
         console.log(err);
         return res.sendStatus(500);
       }
-      res.sendStatus(200);
+      res.send(result);
     }
   )
 });
@@ -74,7 +74,7 @@ app.delete('/api/counter/:id', (req, res) => {
         console.log(err);
         return res.sendStatus(500);
       }
-      res.sendStatus(200);
+      res.send(result);
     }
   )
 });

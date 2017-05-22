@@ -5,22 +5,27 @@ import 'rxjs/add/operator/map';
 @Injectable()
 export class CounterService {
   counters = [];
+  API_URL = 'http://localhost:1337/api';
 
   constructor(private http: Http) {}
 
   getCounters() {
-    return this.http.get('http://localhost:1337/api/counters')
-      .map(res => res.json());
+    return this.http.get(`${this.API_URL}/counters`)
+      .map((res) => this.counters = res.json());
   }
 
   incrementCounter(id, value) {
-    const url = `http://localhost:1337/api/counter/${id}/increment/${value}`;
-    return this.http.put(url, null);
+    const url = `${this.API_URL}/counter/${id}/increment/${value}`;
+    return this.http.put(url, null)
+      .map((res) => res.json())
+      .subscribe((res) => this.counters.find((counter) => counter._id === id).value += value);
   }
 
   decrementCounter(id, value) {
-    const url = `http://localhost:1337/api/counter/${id}/decrement/${value}`;
-    return this.http.put(url, null);
+    const url = `${this.API_URL}/counter/${id}/decrement/${value}`;
+    return this.http.put(url, null)
+      .map((res) => res.json())
+      .subscribe((res) => this.counters.find((counter) => counter._id === id).value -= value);
   }
 
   createCounter(title, value) {
@@ -28,12 +33,15 @@ export class CounterService {
       title,
       value,
     };
-    return this.http.post('http://localhost:1337/api/counter', counter)
-      .map((res) => res.json());
+    return this.http.post(`${this.API_URL}/counter`, counter)
+      .map((res) => res.json())
+      .subscribe((res) => this.counters.push(res));
   }
 
-  deleteCounter(id) {
-    return this.http.delete(`http://localhost:1337/api/counter/${id}`);
+  deleteCounter(counter) {
+    return this.http.delete(`${this.API_URL}/counter/${counter._id}`)
+      .map((res) => res.json())
+      .subscribe((res) => this.counters.splice(this.counters.indexOf(counter), 1));
   }
 
 }
