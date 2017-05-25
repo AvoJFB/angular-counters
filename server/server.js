@@ -2,20 +2,60 @@ const express = require('express');
 const path = require('path');
 const http = require('http');
 const bodyParser = require('body-parser');
-const MongoClient = require('mongodb').MongoClient;
-const ObjectID = require('mongodb').ObjectID;
+const mongoose = require('mongoose');
+const passport = require('passport');
 
-const app = express();
-const DB_URL = process.env.MONGOLAB_URI || 'mongodb://avojfb:avetikharut2000@ds137230.mlab.com:37230/counters-app';
+const users = require('./routes/users');
+const config = require('./config/db');
+const Counter = require('./models/counter');
+
 const port = 1337;
-const db = require('./db');
+const app = express();
 
+mongoose.connect(config.database);
+
+const connection = mongoose.connection;
+
+connection.on('connected', () => {
+  console.log(`Connected to: ${config.database}`)
+});
+
+connection.on('error', (err) => {
+  console.log(`Database error: ${err}`)
+});
+
+// Server static files
+app.use(express.static(path.join('dist')));
+
+// Body parser middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static(path.join('dist')));
+
+// Users API
+app.use('/api/users', users);
+
+// Passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
+require('./config/passport')(passport);
+
+app.listen(port, () => {
+  console.log(`Listening on port ${port}`)
+});
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist/index.html'));
+});
+
+app.get('/api/counters', (req, res) => {
+  Counter.find({}, (err, result) => {
+    if (err) {
+      console.log(err);
+      return res.sendStatus(500)
+    }
+    res.send(result);
+  })
 });
 
 app.post('/api/counter', (req, res) => {
@@ -23,12 +63,12 @@ app.post('/api/counter', (req, res) => {
     title: req.body.title,
     value: req.body.value
   };
-  db.get().collection('counters').insert(counter, (err, result) => {
+  Counter.create(counter, (err, result) => {
     if (err) {
       console.log(err);
       return res.sendStatus(500);
     }
-    res.send(counter);
+    res.send(result);
   })
 });
 
@@ -36,8 +76,8 @@ app.put('/api/counter/:id/increment/:value', (req, res) => {
   if (isNaN(Number(req.params.value))) {
     return res.sendStatus(500);
   }
-  db.get().collection('counters').updateOne(
-    { _id: ObjectID(req.params.id) },
+  Counter.findOneAndUpdate(
+    { _id: req.params.id },
     { $inc: { value: Number(req.params.value) || 1 } },
     (err, result) => {
       if (err) {
@@ -53,8 +93,8 @@ app.put('/api/counter/:id/decrement/:value', (req, res) => {
   if (isNaN(Number(req.params.value))) {
     return res.sendStatus(500);
   }
-  db.get().collection('counters').updateOne(
-    { _id: ObjectID(req.params.id) },
+  Counter.findOneAndUpdate(
+    { _id: req.params.id },
     { $inc: { value: -Number(req.params.value) || -1 } },
     (err, result) => {
       if (err) {
@@ -67,8 +107,8 @@ app.put('/api/counter/:id/decrement/:value', (req, res) => {
 });
 
 app.delete('/api/counter/:id', (req, res) => {
-  db.get().collection('counters').deleteOne(
-    { _id: ObjectID(req.params.id) },
+  Counter.findOneAndRemove(
+    { _id: req.params.id },
     (err, result) => {
       if (err) {
         console.log(err);
@@ -77,25 +117,4 @@ app.delete('/api/counter/:id', (req, res) => {
       res.send(result);
     }
   )
-});
-
-app.get('/api/counters', (req, res) => {
-  db.get().collection('counters').find().toArray((err, result) => {
-    if (err) {
-      console.log(err);
-      return res.sendStatus(500)
-    }
-    res.send(result);
-  })
-});
-
-app.set('port', port);
-
-const server = http.createServer(app);
-
-db.connect(DB_URL, (err) => {
-  if (err) {
-    console.log(err);
-  }
-  server.listen(port, () => console.log(`Listening on port ${port}`))
 });

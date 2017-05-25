@@ -10,6 +10,7 @@ import { CounterListComponent } from './components/counter-app/counter-list/coun
 
 import { CounterService } from './counter.service';
 import { HttpModule } from '@angular/http';
+import { NavbarComponent } from './components/navbar/navbar.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { HttpModule } from '@angular/http';
     CounterFormComponent,
     CounterItemComponent,
     CounterListComponent,
+    NavbarComponent,
   ],
   imports: [
     BrowserModule,
