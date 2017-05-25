@@ -25,7 +25,7 @@ connection.on('error', (err) => {
 });
 
 // Serve static files
-app.use(express.static(path.join('../dist')));
+app.use(express.static(path.join('dist')));
 
 // Body parser middleware
 app.use(bodyParser.json());
@@ -41,7 +41,7 @@ app.use(passport.session());
 require('./config/passport')(passport);
 
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+  res.sendFile(path.join(__dirname, '../dist/index.html'));
 });
 
 app.get('/api/counters', (req, res) => {
