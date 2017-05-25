@@ -41,7 +41,7 @@ app.use(passport.session());
 require('./config/passport')(passport);
 
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../dist/index.html'));
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 app.get('/api/counters', (req, res) => {

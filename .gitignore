@@ -2,8 +2,6 @@
 # Configs
 /server/config
 
-# compiled output
-/dist
 /tmp
 
 # dependencies
