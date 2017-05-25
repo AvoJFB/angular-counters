@@ -24,8 +24,8 @@ connection.on('error', (err) => {
   console.log(`Database error: ${err}`)
 });
 
-// Server static files
-app.use(express.static(path.join('dist')));
+// Serve static files
+app.use(express.static(path.join('../dist')));
 
 // Body parser middleware
 app.use(bodyParser.json());
