@@ -14,7 +14,7 @@ export class AuthService {
     const headers = new Headers();
     headers.append('Content-Type', 'application/json');
 
-    return this.http.post('api/users/register', user, {headers})
+    return this.http.post('api/register', user, {headers})
       .map(res => res.json());
   }
 
@@ -22,7 +22,7 @@ export class AuthService {
     const headers = new Headers();
     headers.append('Content-Type', 'application/json');
 
-    return this.http.post('api/users/login', user, {headers})
+    return this.http.post('api/login', user, {headers})
       .map(res => res.json());
   }
 
@@ -32,12 +32,19 @@ export class AuthService {
     headers.append('Authorization', this.authToken);
     headers.append('Content-Type', 'application/json');
 
-    return this.http.get('api/users/profile', {headers})
+    return this.http.get('api/profile', {headers})
       .map(res => res.json());
   }
 
   loadToken() {
     this.authToken = localStorage.getItem('id_token');
+  }
+
+  getToken() {
+    if (!this.authToken) {
+      this.loadToken();
+    }
+    return this.authToken;
   }
 
   isLoggedIn() {

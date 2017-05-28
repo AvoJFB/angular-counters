@@ -5,23 +5,21 @@ import { RouterModule, Routes } from '@angular/router';
 import { FlashMessagesModule } from 'angular2-flash-messages';
 
 import { AppComponent } from './app.component';
-import { CounterAppComponent } from './components/counter-app/counter-app.component';
-import { CounterFormComponent } from './components/counter-app/counter-form/counter-form.component';
-import { CounterItemComponent } from './components/counter-app/counter-list/counter-item/counter-item.component';
-import { CounterListComponent } from './components/counter-app/counter-list/counter-list.component';
 
 import { AuthGuard } from './guards/auth.guard';
+import { GuestGuard } from './guards/guest.guard';
 
-import { CounterService } from './counter.service';
+import { CounterService } from './services/counter.service';
 import { AuthService } from './services/auth.service';
 import { ValidateService } from './services/validate.service';
 import { HttpModule } from '@angular/http';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { RegisterComponent } from './components/register/register.component';
 import { LoginComponent } from './components/login/login.component';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { HomeComponent } from './components/home/home.component';
+import { MyCountersComponent } from './components/my-counters/my-counters.component';
+import { CounterComponent } from './components/counter/counter.component';
 
 const appRoutes: Routes = [
   {
@@ -31,14 +29,16 @@ const appRoutes: Routes = [
   {
     path: 'register',
     component: RegisterComponent,
+    canActivate: [GuestGuard],
   },
   {
     path: 'login',
     component: LoginComponent,
+    canActivate: [GuestGuard],
   },
   {
-    path: 'dashboard',
-    component: DashboardComponent,
+    path: 'counters',
+    component: MyCountersComponent,
     canActivate: [AuthGuard],
   },
   {
@@ -51,16 +51,13 @@ const appRoutes: Routes = [
 @NgModule({
   declarations: [
     AppComponent,
-    CounterAppComponent,
-    CounterFormComponent,
-    CounterItemComponent,
-    CounterListComponent,
     NavbarComponent,
     RegisterComponent,
     LoginComponent,
-    DashboardComponent,
     ProfileComponent,
     HomeComponent,
+    MyCountersComponent,
+    CounterComponent,
   ],
   imports: [
     BrowserModule,
@@ -74,6 +71,7 @@ const appRoutes: Routes = [
     ValidateService,
     AuthService,
     AuthGuard,
+    GuestGuard,
   ],
   bootstrap: [
     AppComponent,

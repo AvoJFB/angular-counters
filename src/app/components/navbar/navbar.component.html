@@ -22,7 +22,7 @@
           *ngIf="authService.isLoggedIn()"
           [routerLinkActive]="['active']"
           [routerLinkActiveOptions]="{exact: true}">
-          <a [routerLink]="['/dashboard']">Dashboard</a>
+          <a [routerLink]="['/counters']">My Counters</a>
         </li>
         <li
           *ngIf="authService.isLoggedIn()"

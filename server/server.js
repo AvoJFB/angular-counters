@@ -6,8 +6,8 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 
 const users = require('./routes/users');
+const counters = require('./routes/counters');
 const config = require('./config/db');
-const Counter = require('./models/counter');
 
 const port = process.env.PORT || 8080;
 const app = express();
@@ -32,7 +32,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // Users API
-app.use('/api/users', users);
+app.use('/api', users);
+app.use('/api', counters);
 
 // Passport middleware
 app.use(passport.initialize());
@@ -42,77 +43,6 @@ require('./config/passport')(passport);
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../dist/index.html'));
-});
-
-app.get('/api/counters', (req, res) => {
-  Counter.find({}, (err, result) => {
-    if (err) {
-      console.log(err);
-      return res.sendStatus(500)
-    }
-    res.send(result);
-  })
-});
-
-app.post('/api/counter', (req, res) => {
-  const counter = {
-    title: req.body.title,
-    value: req.body.value
-  };
-  Counter.create(counter, (err, result) => {
-    if (err) {
-      console.log(err);
-      return res.sendStatus(500);
-    }
-    res.send(result);
-  })
-});
-
-app.put('/api/counter/:id/increment/:value', (req, res) => {
-  if (isNaN(Number(req.params.value))) {
-    return res.sendStatus(500);
-  }
-  Counter.findOneAndUpdate(
-    { _id: req.params.id },
-    { $inc: { value: Number(req.params.value) || 1 } },
-    (err, result) => {
-      if (err) {
-        console.log(err);
-        return res.sendStatus(500);
-      }
-      res.send(result);
-    }
-  )
-});
-
-app.put('/api/counter/:id/decrement/:value', (req, res) => {
-  if (isNaN(Number(req.params.value))) {
-    return res.sendStatus(500);
-  }
-  Counter.findOneAndUpdate(
-    { _id: req.params.id },
-    { $inc: { value: -Number(req.params.value) || -1 } },
-    (err, result) => {
-      if (err) {
-        console.log(err);
-        return res.sendStatus(500);
-      }
-      res.send(result);
-    }
-  )
-});
-
-app.delete('/api/counter/:id', (req, res) => {
-  Counter.findOneAndRemove(
-    { _id: req.params.id },
-    (err, result) => {
-      if (err) {
-        console.log(err);
-        return res.sendStatus(500);
-      }
-      res.send(result);
-    }
-  )
 });
 
 app.listen(port, () => {
