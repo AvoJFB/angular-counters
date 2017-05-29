@@ -20,6 +20,7 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { HomeComponent } from './components/home/home.component';
 import { MyCountersComponent } from './components/my-counters/my-counters.component';
 import { CounterComponent } from './components/counter/counter.component';
+import { CounterFormComponent } from './components/counter-form/counter-form.component';
 
 const appRoutes: Routes = [
   {
@@ -58,6 +59,7 @@ const appRoutes: Routes = [
     HomeComponent,
     MyCountersComponent,
     CounterComponent,
+    CounterFormComponent,
   ],
   imports: [
     BrowserModule,

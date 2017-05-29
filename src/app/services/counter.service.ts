@@ -36,14 +36,19 @@ export class CounterService {
       .map((res) => res.json());
   }
 
-  createCounter(title, value) {
+  createCounter(title, value?) {
     const counter = {
       title,
       value,
     };
-    return this.http.post(`counter`, counter)
+
+    const headers = new Headers();
+    headers.append('Authorization', this.authService.getToken());
+    headers.append('Content-Type', 'application/json');
+
+    return this.http.post(`api/counter`, counter, {headers})
       .map((res) => res.json())
-      .subscribe((res) => this.counters.push(res));
+      .subscribe((res) => this.counters.push(res.counter));
   }
 
   deleteCounter(counter) {
